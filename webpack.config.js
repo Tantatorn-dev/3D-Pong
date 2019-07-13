@@ -3,11 +3,11 @@ const path = require("path");
 module.exports = {
     entry: './src/index.ts',
     output: {
-        filename: 'index.js',
+        filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     resolve: {
-        extensions: [".ts"]
+        extensions: [".ts",".js"]
     },
     module: {
         rules: [
@@ -20,4 +20,9 @@ module.exports = {
         "cannon": true,
         "earcut": true
     },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 9000
+    }
 };
