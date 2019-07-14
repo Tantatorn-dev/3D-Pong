@@ -1,12 +1,14 @@
 import { MeshBuilder, Vector3, Mesh, Scene, Material, StandardMaterial, Color3 } from "babylonjs";
 
 export default class Ball {
-    _position: Vector3;
     _body: Mesh;
 
     constructor(scene: Scene) {
         // create a ball
-        this._body = MeshBuilder.CreateSphere("ball", { diameter: 10, updatable: true }, scene);
+        this._body = MeshBuilder.CreateSphere("ball", {
+            diameter: 6,
+            updatable: true
+        }, scene);
 
         // prepare the material
         let mat = new StandardMaterial("ballMaterial", scene);

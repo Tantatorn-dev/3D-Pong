@@ -1,5 +1,6 @@
 import { Engine, Scene, HemisphericLight, Vector3, Light, ArcRotateCamera } from "babylonjs";
 import Ball from "./components/objects/ball";
+import Paddle from "./components/objects/paddle";
 
 export default class Game {
     _canvas: HTMLCanvasElement;
@@ -8,6 +9,8 @@ export default class Game {
     _camera: ArcRotateCamera;
     _light: Light;
     _ball: Ball;
+    _paddle1: Paddle;
+    _paddle2:Paddle;
 
     constructor(canvasElement: string) {
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -31,6 +34,10 @@ export default class Game {
 
         //add a ball to the scene
         this._ball = new Ball(this._scene);
+
+        //add paddles to the scene
+        this._paddle1 = new Paddle('player', this._scene);
+        this._paddle2 = new Paddle('cpu',this._scene)
     }
 
     render(): void {
