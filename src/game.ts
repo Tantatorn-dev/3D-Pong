@@ -38,6 +38,11 @@ export default class Game {
         //add paddles to the scene
         this._paddle1 = new Paddle('player', this._scene);
         this._paddle2 = new Paddle('cpu',this._scene)
+
+        //register update methods
+        this._scene.registerBeforeRender(()=>{
+            this._ball.update();
+        })
     }
 
     render(): void {
