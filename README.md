@@ -8,7 +8,7 @@
 
 ### Tech
 
-Dillinger uses a number of open source projects to work properly:
+3D Pong uses a number of open source projects to work properly:
 
 * [BabylonJS] - Babylon.js brings powerful, beautiful, simple, and open 3D to everyone on the web.
 
