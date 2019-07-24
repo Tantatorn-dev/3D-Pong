@@ -1,11 +1,23 @@
-import { MeshBuilder, Vector3, Mesh, Scene, Material, StandardMaterial, Color3 } from "babylonjs";
+import { MeshBuilder, Mesh, Scene, StandardMaterial, Color3 } from "babylonjs";
+import Paddle from "./paddle";
+
+enum Direction {
+    UP = 1,
+    DOWN,
+    L_UP,
+    L_DOWN,
+    R_UP,
+    R_DOWN
+}
 
 export default class Ball {
     _body: Mesh;
     _speed: number;
-    _direction: string;
+    _direction: number;
+    _paddle1: Paddle;
+    _paddle2: Paddle;
 
-    constructor(scene: Scene) {
+    constructor(scene: Scene, paddle1, paddle2: Paddle) {
         // create a ball
         this._body = MeshBuilder.CreateSphere("ball", {
             diameter: 6,
@@ -21,38 +33,54 @@ export default class Ball {
 
         // set start speed and direction
         this._speed = 0.5;
-        this._direction = 'down'
+        this._direction = 1;
+
+        // enable collision
+        this._body.checkCollisions = true;
+
+        this._paddle1 = paddle1;
+        this._paddle2 = paddle2;
+
     }
 
     update() {
         this._move();
+        this._checkCollision();
     }
 
-    _move(){
+    _move() {
         switch (this._direction) {
-            case 'down':
+            case Direction.DOWN:
                 this._body.position.x += this._speed;
                 break;
-            case 'up':
+            case Direction.UP:
                 this._body.position.x -= this._speed;
                 break;
-            case 'left-down':
+            case Direction.L_DOWN:
                 this._body.position.x += this._speed;
                 this._body.position.z -= this._speed;
                 break;
-            case 'right-down':
+            case Direction.R_DOWN:
                 this._body.position.x += this._speed;
                 this._body.position.z += this._speed;
                 break;
-            case 'left-up':
+            case Direction.L_UP:
                 this._body.position.x -= this._speed;
                 this._body.position.z -= this._speed;
                 break;
-            case 'right-up':
+            case Direction.R_UP:
                 this._body.position.x -= this._speed;
                 this._body.position.z += this._speed;
                 break;
         }
+    }
 
+    _checkCollision() {
+        if (this._body.intersectsMesh(this._paddle1._body, false)) {
+            this._direction = Direction.UP;
+        }
+        if (this._body.intersectsMesh(this._paddle2._body, false)) {
+            this._direction = Direction.DOWN;
+        }
     }
 };

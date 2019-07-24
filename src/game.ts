@@ -1,4 +1,4 @@
-import { Engine, Scene, HemisphericLight, Vector3, Light, ArcRotateCamera } from "babylonjs";
+import { Engine, Scene, HemisphericLight, Vector3, Light, ArcRotateCamera, ActionManager } from "babylonjs";
 import Ball from "./components/objects/ball";
 import Paddle from "./components/objects/paddle";
 
@@ -32,17 +32,25 @@ export default class Game {
         //light
         this._light = new HemisphericLight('light1', new Vector3(10, 10, 10), this._scene);
 
-        //add a ball to the scene
-        this._ball = new Ball(this._scene);
-
         //add paddles to the scene
         this._paddle1 = new Paddle('player', this._scene);
         this._paddle2 = new Paddle('cpu',this._scene)
 
+        //add a ball to the scene
+        this._ball = new Ball(this._scene,this._paddle1,this._paddle2);
+
+        //enable collision
+        this._scene.collisionsEnabled = true;
+        this._camera.checkCollisions = true;
+
+        //keyboard input configuration
+        this._camera.inputs.clear()
+
         //register update methods
         this._scene.registerBeforeRender(()=>{
             this._ball.update();
-        })
+        });
+
     }
 
     render(): void {
@@ -52,6 +60,8 @@ export default class Game {
 
         window.addEventListener('resize', () => {
             this._engine.resize();
-        })
+        });
+
+        this._paddle1.handleEvent();
     }
 }
