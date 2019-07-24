@@ -1,19 +1,11 @@
 import { MeshBuilder, Mesh, Scene, StandardMaterial, Color3 } from "babylonjs";
 import Paddle from "./paddle";
-
-enum Direction {
-    UP = 1,
-    DOWN,
-    L_UP,
-    L_DOWN,
-    R_UP,
-    R_DOWN
-}
+import { PaddleDirection, BallDirection } from "../enums/enums";
 
 export default class Ball {
     _body: Mesh;
     _speed: number;
-    _direction: number;
+    _direction: BallDirection;
     _paddle1: Paddle;
     _paddle2: Paddle;
 
@@ -50,25 +42,25 @@ export default class Ball {
 
     _move() {
         switch (this._direction) {
-            case Direction.DOWN:
+            case BallDirection.DOWN:
                 this._body.position.x += this._speed;
                 break;
-            case Direction.UP:
+            case BallDirection.UP:
                 this._body.position.x -= this._speed;
                 break;
-            case Direction.L_DOWN:
+            case BallDirection.L_DOWN:
                 this._body.position.x += this._speed;
                 this._body.position.z -= this._speed;
                 break;
-            case Direction.R_DOWN:
+            case BallDirection.R_DOWN:
                 this._body.position.x += this._speed;
                 this._body.position.z += this._speed;
                 break;
-            case Direction.L_UP:
+            case BallDirection.L_UP:
                 this._body.position.x -= this._speed;
                 this._body.position.z -= this._speed;
                 break;
-            case Direction.R_UP:
+            case BallDirection.R_UP:
                 this._body.position.x -= this._speed;
                 this._body.position.z += this._speed;
                 break;
@@ -77,10 +69,26 @@ export default class Ball {
 
     _checkCollision() {
         if (this._body.intersectsMesh(this._paddle1._body, false)) {
-            this._direction = Direction.UP;
+            if (this._paddle1.getDirection() == PaddleDirection.NONE) {
+                this._direction = BallDirection.UP;
+            }
+            else if (this._paddle1.getDirection() == PaddleDirection.LEFT) {
+                this._direction = BallDirection.L_UP;
+            }
+            else if (this._paddle1.getDirection() == PaddleDirection.RIGHT) {
+                this._direction = BallDirection.R_UP;
+            }
         }
         if (this._body.intersectsMesh(this._paddle2._body, false)) {
-            this._direction = Direction.DOWN;
+            if (this._paddle2.getDirection() == PaddleDirection.NONE) {
+                this._direction = BallDirection.DOWN;
+            }
+            else if (this._paddle2.getDirection() == PaddleDirection.LEFT) {
+                this._direction = BallDirection.L_DOWN;
+            }
+            else if (this._paddle2.getDirection() == PaddleDirection.RIGHT) {
+                this._direction = BallDirection.R_DOWN;
+            }
         }
     }
 };

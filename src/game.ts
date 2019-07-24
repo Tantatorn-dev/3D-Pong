@@ -10,7 +10,7 @@ export default class Game {
     _light: Light;
     _ball: Ball;
     _paddle1: Paddle;
-    _paddle2:Paddle;
+    _paddle2: Paddle;
 
     constructor(canvasElement: string) {
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -34,10 +34,10 @@ export default class Game {
 
         //add paddles to the scene
         this._paddle1 = new Paddle('player', this._scene);
-        this._paddle2 = new Paddle('cpu',this._scene)
+        this._paddle2 = new Paddle('cpu', this._scene)
 
         //add a ball to the scene
-        this._ball = new Ball(this._scene,this._paddle1,this._paddle2);
+        this._ball = new Ball(this._scene, this._paddle1, this._paddle2);
 
         //enable collision
         this._scene.collisionsEnabled = true;
@@ -47,13 +47,16 @@ export default class Game {
         this._camera.inputs.clear()
 
         //register update methods
-        this._scene.registerBeforeRender(()=>{
+        this._scene.registerBeforeRender(() => {
             this._ball.update();
         });
 
     }
 
     render(): void {
+        this._paddle1.handleEvent();
+        this._paddle2.handleEvent();
+
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
@@ -61,7 +64,5 @@ export default class Game {
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
-
-        this._paddle1.handleEvent();
     }
 }
