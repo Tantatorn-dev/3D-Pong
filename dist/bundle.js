@@ -108,6 +108,54 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 
 /***/ }),
 
+/***/ "./src/components/enums/enums.ts":
+/*!***************************************!*\
+  !*** ./src/components/enums/enums.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar BallDirection;\n(function (BallDirection) {\n    BallDirection[BallDirection[\"UP\"] = 1] = \"UP\";\n    BallDirection[BallDirection[\"DOWN\"] = 2] = \"DOWN\";\n    BallDirection[BallDirection[\"L_UP\"] = 3] = \"L_UP\";\n    BallDirection[BallDirection[\"L_DOWN\"] = 4] = \"L_DOWN\";\n    BallDirection[BallDirection[\"R_UP\"] = 5] = \"R_UP\";\n    BallDirection[BallDirection[\"R_DOWN\"] = 6] = \"R_DOWN\";\n})(BallDirection = exports.BallDirection || (exports.BallDirection = {}));\nvar PaddleDirection;\n(function (PaddleDirection) {\n    PaddleDirection[PaddleDirection[\"LEFT\"] = 0] = \"LEFT\";\n    PaddleDirection[PaddleDirection[\"RIGHT\"] = 1] = \"RIGHT\";\n    PaddleDirection[PaddleDirection[\"NONE\"] = 2] = \"NONE\";\n})(PaddleDirection = exports.PaddleDirection || (exports.PaddleDirection = {}));\n\n\n//# sourceURL=webpack:///./src/components/enums/enums.ts?");
+
+/***/ }),
+
+/***/ "./src/components/objects/ball.ts":
+/*!****************************************!*\
+  !*** ./src/components/objects/ball.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar babylonjs_1 = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\nvar enums_1 = __webpack_require__(/*! ../enums/enums */ \"./src/components/enums/enums.ts\");\nvar Ball = (function () {\n    function Ball(scene, paddle1, paddle2) {\n        this._body = babylonjs_1.MeshBuilder.CreateSphere(\"ball\", {\n            diameter: 6,\n            updatable: true\n        }, scene);\n        var mat = new babylonjs_1.StandardMaterial('ballMaterial', scene);\n        mat.diffuseColor = new babylonjs_1.Color3(1, 0, 0);\n        this._body.material = mat;\n        this._speed = 0.5;\n        this._direction = 1;\n        this._body.checkCollisions = true;\n        this._paddle1 = paddle1;\n        this._paddle2 = paddle2;\n    }\n    Ball.prototype.update = function () {\n        this._move();\n        this._checkCollision();\n    };\n    Ball.prototype._move = function () {\n        switch (this._direction) {\n            case enums_1.BallDirection.DOWN:\n                this._body.position.x += this._speed;\n                break;\n            case enums_1.BallDirection.UP:\n                this._body.position.x -= this._speed;\n                break;\n            case enums_1.BallDirection.L_DOWN:\n                this._body.position.x += this._speed;\n                this._body.position.z -= this._speed;\n                break;\n            case enums_1.BallDirection.R_DOWN:\n                this._body.position.x += this._speed;\n                this._body.position.z += this._speed;\n                break;\n            case enums_1.BallDirection.L_UP:\n                this._body.position.x -= this._speed;\n                this._body.position.z -= this._speed;\n                break;\n            case enums_1.BallDirection.R_UP:\n                this._body.position.x -= this._speed;\n                this._body.position.z += this._speed;\n                break;\n        }\n    };\n    Ball.prototype._checkCollision = function () {\n        if (this._body.intersectsMesh(this._paddle1._body, false)) {\n            if (this._paddle1.getDirection() == enums_1.PaddleDirection.NONE) {\n                this._direction = enums_1.BallDirection.UP;\n            }\n            else if (this._paddle1.getDirection() == enums_1.PaddleDirection.LEFT) {\n                this._direction = enums_1.BallDirection.L_UP;\n            }\n            else if (this._paddle1.getDirection() == enums_1.PaddleDirection.RIGHT) {\n                this._direction = enums_1.BallDirection.R_UP;\n            }\n        }\n        if (this._body.intersectsMesh(this._paddle2._body, false)) {\n            if (this._paddle2.getDirection() == enums_1.PaddleDirection.NONE) {\n                this._direction = enums_1.BallDirection.DOWN;\n            }\n            else if (this._paddle2.getDirection() == enums_1.PaddleDirection.LEFT) {\n                this._direction = enums_1.BallDirection.L_DOWN;\n            }\n            else if (this._paddle2.getDirection() == enums_1.PaddleDirection.RIGHT) {\n                this._direction = enums_1.BallDirection.R_DOWN;\n            }\n        }\n    };\n    return Ball;\n}());\nexports.default = Ball;\n;\n\n\n//# sourceURL=webpack:///./src/components/objects/ball.ts?");
+
+/***/ }),
+
+/***/ "./src/components/objects/paddle.ts":
+/*!******************************************!*\
+  !*** ./src/components/objects/paddle.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar babylonjs_1 = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\nvar enums_1 = __webpack_require__(/*! ../enums/enums */ \"./src/components/enums/enums.ts\");\nvar WIDTH = 2;\nvar HEIGHT = 10;\nvar DEPTH = 50;\nvar Paddle = (function () {\n    function Paddle(paddleType, scene) {\n        this._type = paddleType;\n        this._body = babylonjs_1.MeshBuilder.CreateBox(this._type, {\n            depth: DEPTH,\n            width: WIDTH,\n            height: HEIGHT,\n        }, scene);\n        var mat = new babylonjs_1.StandardMaterial('paddleMaterial', scene);\n        mat.diffuseColor = new babylonjs_1.Color3(0, 0, 1);\n        this._body.material = mat;\n        this._body.position = this._type == 'player' ? new babylonjs_1.Vector3(30, 0, 0) : new babylonjs_1.Vector3(-30, 0, 0);\n        this._body.checkCollisions = true;\n        this._direction = enums_1.PaddleDirection.NONE;\n    }\n    Paddle.prototype.handleEvent = function () {\n        var _this = this;\n        if (this._type == 'player') {\n            window.addEventListener('keydown', function (event) {\n                switch (event.key) {\n                    case 'a':\n                        _this._body.position.z -= 0.01;\n                        _this._direction = enums_1.PaddleDirection.LEFT;\n                        break;\n                    case 'd':\n                        _this._body.position.z += 0.01;\n                        _this._direction = enums_1.PaddleDirection.RIGHT;\n                        break;\n                    default:\n                        _this._direction = enums_1.PaddleDirection.NONE;\n                }\n            });\n        }\n    };\n    Paddle.prototype.moveByBallPosition = function (z) {\n        if (this._type == 'cpu') {\n            if (z > this._body.position.z) {\n                this._body.position.z += 0.3;\n                this._direction = enums_1.PaddleDirection.LEFT;\n            }\n            if (z < this._body.position.z) {\n                this._body.position.z -= 0.3;\n                this._direction = enums_1.PaddleDirection.RIGHT;\n            }\n            if (z == this._body.position.z) {\n                this._direction = enums_1.PaddleDirection.NONE;\n            }\n        }\n    };\n    Paddle.prototype.getDirection = function () {\n        return this._direction;\n    };\n    return Paddle;\n}());\nexports.default = Paddle;\n\n\n//# sourceURL=webpack:///./src/components/objects/paddle.ts?");
+
+/***/ }),
+
+/***/ "./src/game.ts":
+/*!*********************!*\
+  !*** ./src/game.ts ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar babylonjs_1 = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\nvar ball_1 = __webpack_require__(/*! ./components/objects/ball */ \"./src/components/objects/ball.ts\");\nvar paddle_1 = __webpack_require__(/*! ./components/objects/paddle */ \"./src/components/objects/paddle.ts\");\nvar Game = (function () {\n    function Game(canvasElement) {\n        this._canvas = document.getElementById(canvasElement);\n        this._engine = new babylonjs_1.Engine(this._canvas, true);\n    }\n    Game.prototype.createScene = function () {\n        var _this = this;\n        this._scene = new babylonjs_1.Scene(this._engine);\n        this._camera = new babylonjs_1.ArcRotateCamera('camera', 0, 0, 100, new babylonjs_1.Vector3(0, 0, 0), this._scene);\n        this._camera.setTarget(babylonjs_1.Vector3.Zero());\n        this._camera.attachControl(this._canvas, false);\n        this._light = new babylonjs_1.HemisphericLight('light1', new babylonjs_1.Vector3(10, 10, 10), this._scene);\n        this._paddle1 = new paddle_1.default('player', this._scene);\n        this._paddle2 = new paddle_1.default('cpu', this._scene);\n        this._ball = new ball_1.default(this._scene, this._paddle1, this._paddle2);\n        this._scene.collisionsEnabled = true;\n        this._camera.checkCollisions = true;\n        this._camera.inputs.clear();\n        this._scene.registerBeforeRender(function () {\n            _this._paddle1.handleEvent();\n            _this._paddle2.moveByBallPosition(_this._ball._body.position.z);\n            _this._ball.update();\n        });\n    };\n    Game.prototype.render = function () {\n        var _this = this;\n        this._engine.runRenderLoop(function () {\n            _this._scene.render();\n        });\n        window.addEventListener('resize', function () {\n            _this._engine.resize();\n        });\n    };\n    return Game;\n}());\nexports.default = Game;\n\n\n//# sourceURL=webpack:///./src/game.ts?");
+
+/***/ }),
+
 /***/ "./src/index.ts":
 /*!**********************!*\
   !*** ./src/index.ts ***!
@@ -116,7 +164,7 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar babylonjs_1 = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\nvar canvas = document.getElementById(\"renderCanvas\");\nvar engine = new babylonjs_1.Engine(canvas, true);\nfunction createScene() {\n    var scene = new babylonjs_1.Scene(engine);\n    var camera = new babylonjs_1.ArcRotateCamera(\"Camera\", Math.PI / 2, Math.PI / 2, 2, babylonjs_1.Vector3.Zero(), scene);\n    camera.attachControl(canvas, true);\n    var light1 = new babylonjs_1.HemisphericLight(\"light1\", new babylonjs_1.Vector3(1, 1, 0), scene);\n    var sphere = babylonjs_1.MeshBuilder.CreateSphere(\"sphere\", { diameter: 1 }, scene);\n    return scene;\n}\nvar scene = createScene();\nengine.runRenderLoop(function () {\n    scene.render();\n});\n\n\n//# sourceURL=webpack:///./src/index.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", { value: true });\nvar game_1 = __webpack_require__(/*! ./game */ \"./src/game.ts\");\nwindow.addEventListener('DOMContentLoaded', function () {\n    var game = new game_1.default('renderCanvas');\n    game.createScene();\n    game.render();\n});\n\n\n//# sourceURL=webpack:///./src/index.ts?");
 
 /***/ })
 
