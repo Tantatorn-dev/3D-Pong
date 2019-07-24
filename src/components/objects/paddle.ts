@@ -1,5 +1,6 @@
 import { Mesh, Scene, MeshBuilder, StandardMaterial, Color3, Vector3, ActionManager, ExecuteCodeAction } from "babylonjs";
 import { PaddleDirection } from "../enums/enums";
+import Ball from "./ball";
 
 const WIDTH = 2;
 const HEIGHT = 10;
@@ -42,11 +43,11 @@ export default class Paddle {
                 (event) => {
                     switch (event.key) {
                         case 'a':
-                            this._body.position.z--;
+                            this._body.position.z-=0.01;
                             this._direction = PaddleDirection.LEFT;
                             break;
                         case 'd':
-                            this._body.position.z++;
+                            this._body.position.z+=0.01;
                             this._direction = PaddleDirection.RIGHT;
                             break;
                         default:
@@ -54,8 +55,21 @@ export default class Paddle {
                     }
                 })
         }
-        if (this._type == 'cpu') {
-            this._direction = PaddleDirection.NONE;
+    }
+
+    moveByBallPosition(z:number) {
+        if(this._type=='cpu'){
+            if(z>this._body.position.z){
+                            this._body.position.z+=0.3;
+                            this._direction = PaddleDirection.LEFT;
+            }
+            if(z<this._body.position.z){
+                            this._body.position.z-=0.3;
+                            this._direction = PaddleDirection.RIGHT;
+            }
+            if(z==this._body.position.z){
+                this._direction = PaddleDirection.NONE;
+            }
         }
     }
 

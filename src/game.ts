@@ -48,14 +48,14 @@ export default class Game {
 
         //register update methods
         this._scene.registerBeforeRender(() => {
+            this._paddle1.handleEvent();
+            this._paddle2.moveByBallPosition(this._ball._body.position.z);
             this._ball.update();
         });
 
     }
 
     render(): void {
-        this._paddle1.handleEvent();
-        this._paddle2.handleEvent();
 
         this._engine.runRenderLoop(() => {
             this._scene.render();
